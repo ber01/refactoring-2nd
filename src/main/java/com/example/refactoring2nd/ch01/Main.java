@@ -10,27 +10,6 @@ import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Map<String, Play> plays = new HashMap<>();
-        plays.put("hamlet", Play.builder().name("Hamlet").type(Type.TRAGEDY).build());
-        plays.put("as-like", Play.builder().name("As You Like It").type(Type.COMEDY).build());
-        plays.put("othello", Play.builder().name("Othello").type(Type.TRAGEDY).build());
-
-        List<Performance> performances = new ArrayList<>();
-        performances.add(Performance.builder().playID("hamlet").audience(55).build());
-        performances.add(Performance.builder().playID("as-like").audience(35).build());
-        performances.add(Performance.builder().playID("othello").audience(40).build());
-
-        Invoice invoice = Invoice.builder().customer("BigCo").performances(performances).build();
-
-        Main main = new Main();
-        try {
-            System.out.println(main.statement(invoice, plays));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String statement(Invoice invoice, Map<String, Play> plays) throws Exception {
         int totalAmount = 0;
         int volumeCredits = 0;
