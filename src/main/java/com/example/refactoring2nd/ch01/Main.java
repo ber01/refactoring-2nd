@@ -1,6 +1,5 @@
 package com.example.refactoring2nd.ch01;
 
-import com.example.refactoring2nd.StatementData;
 import com.example.refactoring2nd.ch01.type.Invoice;
 import com.example.refactoring2nd.ch01.type.Performance;
 
@@ -21,6 +20,21 @@ public class Main {
         }
         result.append(String.format("총액: %s\n", usd(data.totalAmount())));
         result.append(String.format("적립 포인트: %d점\n", data.totalVolumeCredits()));
+        return result.toString();
+    }
+
+    private String renderHtml(StatementData data) throws Exception {
+        StringBuilder result = new StringBuilder(String.format("<h1> 청구내역 (고객명: %s)\n </h1>", data.getCustomer()));
+        result.append("<table> \n");
+        result.append("<tr><th> 연극 </th> <th>좌석 수</th> <th>금액</th>");
+        for (Performance perf : data.getPerformances()) {
+            result.append(String.format("<tr><td> %s: </td> <td> $%s </td> <td> %d석 </td></tr>\n", data.playFor(perf).name, usd(data.amountFor(perf)), perf.audience));
+            result.append(String.format("<tr><td> %s: </td> <td> $%s </td> <td> %d석 </td></tr>\n", data.playFor(perf).name, usd(data.amountFor(perf)), perf.audience));
+        }
+        result.append("</table>\n");
+
+        result.append(String.format("총액: $%s\n", usd(data.totalAmount())));
+        result.append(String.format("적립 포인트: %d점", data.totalVolumeCredits()));
         return result.toString();
     }
 

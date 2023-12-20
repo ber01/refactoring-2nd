@@ -1,10 +1,8 @@
-package com.example.refactoring2nd;
+package com.example.refactoring2nd.ch01;
 
-import com.example.refactoring2nd.ch01.Plays;
 import com.example.refactoring2nd.ch01.type.Invoice;
 import com.example.refactoring2nd.ch01.type.Performance;
 import com.example.refactoring2nd.ch01.type.Play;
-import com.example.refactoring2nd.ch01.type.Type;
 
 import java.util.List;
 
@@ -32,24 +30,7 @@ public class StatementData {
     }
 
     public int amountFor(Performance aPerformance) throws Exception {
-        int result;
-        switch (playFor(aPerformance).type) {
-            case TRAGEDY -> {
-                result = 40_000;
-                if (aPerformance.audience > 30) {
-                    result += 1_000 * (aPerformance.audience - 30);
-                }
-            }
-            case COMEDY -> {
-                result = 30_000;
-                result += 300 * aPerformance.audience;
-                if (aPerformance.audience > 20) {
-                    result += 10_000 + 500 * (aPerformance.audience - 20);
-                }
-            }
-            default -> throw new Exception("알 수 없는 장르: " + playFor(aPerformance).type);
-        }
-        return result;
+        return PerformanceCalculatorFactory.createPerformanceCalculator(aPerformance, playFor(aPerformance)).amount();
     }
 
     public int totalAmount() throws Exception {
@@ -68,13 +49,8 @@ public class StatementData {
         return result;
     }
 
-    private int volumeCreditsFor(Performance perf) {
-        int result = 0;
-        result += Math.max(perf.audience - 30, 0);
-        if (Type.COMEDY == playFor(perf).type) {
-            result += (int) Math.floor((double) perf.audience / 5);
-        }
-        return result;
+    private int volumeCreditsFor(Performance aPerformance) {
+        return PerformanceCalculatorFactory.createPerformanceCalculator(aPerformance, playFor(aPerformance)).volumeCredits();
     }
 
 }
