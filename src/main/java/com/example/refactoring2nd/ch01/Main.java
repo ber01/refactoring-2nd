@@ -11,31 +11,49 @@ import java.util.*;
 public class Main {
 
     public String statement(Invoice invoice, Plays plays) throws Exception {
-        int totalAmount = 0;
-        int volumeCredits = 0;
-        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
-        format.setMinimumFractionDigits(2);
 
         StringBuilder result = new StringBuilder(String.format("청구 내역 (고객명: %s)\n", invoice.customer));
 
         for (Performance perf: invoice.performances) {
-            // 포인트를 적립한다.
-            volumeCredits += Math.max(perf.audience - 30, 0);
-
-            // 희극 관객 5명마다 추가 포인트를 제공한다
-            if (playFor(plays, perf).type == Type.COMEDY) {
-                volumeCredits += (int) Math.floor((double) perf.audience / 5);
-            }
-
             // 청구 내역을 출력한다.
-            result.append(String.format(" %s: %s (%d)석\n", playFor(plays, perf).name, format.format(amountFor(perf, plays) / 100), perf.audience));
-            totalAmount += amountFor(perf, plays);
+            result.append(String.format(" %s: %s (%d)석\n", playFor(plays, perf).name, usd(amountFor(perf, plays)), perf.audience));
         }
-
-        result.append(String.format("총액: %s\n", format.format(totalAmount / 100)));
-        result.append(String.format("적립 포인트: %d점\n", volumeCredits));
+        
+        result.append(String.format("총액: %s\n", usd(totalAmount(invoice, plays))));
+        result.append(String.format("적립 포인트: %d점\n", totalVolumeCredits(invoice, plays)));
 
         return result.toString();
+    }
+
+    private int totalAmount(Invoice invoice, Plays plays) throws Exception {
+        int result = 0;
+        for (Performance perf: invoice.performances) {
+            result += amountFor(perf, plays);
+        }
+        return result;
+    }
+
+    private int totalVolumeCredits(Invoice invoice, Plays plays) {
+        int result = 0;
+        for (Performance perf: invoice.performances) {
+            result += volumeCreditsFor(plays, perf);
+        }
+        return result;
+    }
+
+    private String usd(int aNumber) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        format.setMinimumFractionDigits(2);
+        return format.format(aNumber / 100);
+    }
+
+    private int volumeCreditsFor(Plays plays, Performance perf) {
+        int result = 0;
+        result += Math.max(perf.audience - 30, 0);
+        if (Type.COMEDY == playFor(plays, perf).type) {
+            result += (int) Math.floor((double) perf.audience / 5);
+        }
+        return result;
     }
 
     private Play playFor(Plays plays, Performance aPerformance) {
