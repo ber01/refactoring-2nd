@@ -1,7 +1,5 @@
 # Refactoring-2nd
 
-![image](https://github.com/ber01/spring-boot-rehabilitation/assets/28918801/bff74805-cc11-48f1-8fcb-b146cf10b3c3)
-
 ## 목적
 
 리팩터팅 2판을 자바 코드로 변경하면서 세상에서 제일 느리게 읽기
@@ -14,4 +12,4 @@
 |:----:|:-------------------------------:|
 | JDK  |             JDK 17              |
 | 운영체제 |            Mac OS X             |
-| IDE  | IntelliJ IDEA Ultimate 2023.2.5 |
+| IDE  | IntelliJ IDEA Ultimate 2023.3.1 |
