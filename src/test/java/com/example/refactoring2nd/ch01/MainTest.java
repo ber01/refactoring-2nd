@@ -16,19 +16,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MainTest {
 
-    final String expected = "청구 내역 (고객명: BigCo)\n" +
-            " Hamlet: $650.00 (55)석\n" +
-            " As You Like It: $580.00 (35)석\n" +
-            " Othello: $500.00 (40)석\n" +
-            "총액: $1,730.00\n" +
-            "적립 포인트: 47점\n";
+    final String expected = """
+            청구 내역 (고객명: BigCo)
+             Hamlet: $650.00 (55)석
+             As You Like It: $580.00 (35)석
+             Othello: $500.00 (40)석
+            총액: $1,730.00
+            적립 포인트: 47점
+            """;
 
     @Test
     void test() throws Exception {
-        Map<String, Play> plays = new HashMap<>();
-        plays.put("hamlet", Play.builder().name("Hamlet").type(Type.TRAGEDY).build());
-        plays.put("as-like", Play.builder().name("As You Like It").type(Type.COMEDY).build());
-        plays.put("othello", Play.builder().name("Othello").type(Type.TRAGEDY).build());
+        Map<String, Play> map = new HashMap<>();
+        map.put("hamlet", Play.builder().name("Hamlet").type(Type.TRAGEDY).build());
+        map.put("as-like", Play.builder().name("As You Like It").type(Type.COMEDY).build());
+        map.put("othello", Play.builder().name("Othello").type(Type.TRAGEDY).build());
+        Plays plays = new Plays(map);
 
         List<Performance> performances = new ArrayList<>();
         performances.add(Performance.builder().playID("hamlet").audience(55).build());

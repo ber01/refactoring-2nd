@@ -10,51 +10,56 @@ import java.util.*;
 
 public class Main {
 
-    public String statement(Invoice invoice, Map<String, Play> plays) throws Exception {
+    public String statement(Invoice invoice, Plays plays) throws Exception {
         int totalAmount = 0;
         int volumeCredits = 0;
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         format.setMinimumFractionDigits(2);
 
-        String result = String.format("청구 내역 (고객명: %s)\n", invoice.customer);
+        StringBuilder result = new StringBuilder(String.format("청구 내역 (고객명: %s)\n", invoice.customer));
 
         for (Performance perf: invoice.performances) {
-            Play play = plays.get(perf.playID);
-            int thisAmount = 0;
-
-            switch (play.type) {
-                case TRAGEDY -> {
-                    thisAmount = 40_000;
-                    if (perf.audience > 30) {
-                        thisAmount += 1_000 * (perf.audience - 30);
-                    }
-                }
-                case COMEDY -> {
-                    thisAmount = 30_000;
-                    thisAmount += 300 * perf.audience;
-                    if (perf.audience > 20) {
-                        thisAmount += 10_000 + 500 * (perf.audience - 20);
-                    }
-                }
-                default -> throw new Exception("알 수 없는 장르: " + play.type);
-            }
-
             // 포인트를 적립한다.
             volumeCredits += Math.max(perf.audience - 30, 0);
 
             // 희극 관객 5명마다 추가 포인트를 제공한다
-            if (play.type == Type.COMEDY) {
+            if (playFor(plays, perf).type == Type.COMEDY) {
                 volumeCredits += (int) Math.floor((double) perf.audience / 5);
             }
 
             // 청구 내역을 출력한다.
-            result += String.format(" %s: %s (%d)석\n", play.name, format.format(thisAmount / 100), perf.audience);
-            totalAmount += thisAmount;
+            result.append(String.format(" %s: %s (%d)석\n", playFor(plays, perf).name, format.format(amountFor(perf, plays) / 100), perf.audience));
+            totalAmount += amountFor(perf, plays);
         }
 
-        result += String.format("총액: %s\n", format.format(totalAmount/100));
-        result += String.format("적립 포인트: %d점\n", volumeCredits);
+        result.append(String.format("총액: %s\n", format.format(totalAmount / 100)));
+        result.append(String.format("적립 포인트: %d점\n", volumeCredits));
 
+        return result.toString();
+    }
+
+    private Play playFor(Plays plays, Performance aPerformance) {
+        return plays.get(aPerformance);
+    }
+
+    private int amountFor(Performance aPerformance, Plays plays) throws Exception {
+        int result;
+        switch (playFor(plays, aPerformance).type) {
+            case TRAGEDY -> {
+                result = 40_000;
+                if (aPerformance.audience > 30) {
+                    result += 1_000 * (aPerformance.audience - 30);
+                }
+            }
+            case COMEDY -> {
+                result = 30_000;
+                result += 300 * aPerformance.audience;
+                if (aPerformance.audience > 20) {
+                    result += 10_000 + 500 * (aPerformance.audience - 20);
+                }
+            }
+            default -> throw new Exception("알 수 없는 장르: " + playFor(plays, aPerformance).type);
+        }
         return result;
     }
 }
