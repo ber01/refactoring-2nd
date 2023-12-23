@@ -24,4 +24,11 @@ class MainTest {
         assertThat(asia.profit()).isEqualTo(230);
     }
 
+    @Test
+    public void changeProduction() {
+        asia.producers.get(0).setProduction(20);
+        assertThat(asia.shortfall()).isEqualTo(-6);
+        assertThat(asia.profit()).isEqualTo(292);
+    }
+
 }

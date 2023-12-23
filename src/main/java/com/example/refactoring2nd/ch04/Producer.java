@@ -29,8 +29,7 @@ public class Producer {
         this.production = data.getProduction();
     }
 
-    public void setProduction(String amountStr) {
-        int newProduction = Integer.parseInt(amountStr);
+    public void setProduction(int newProduction) {
         this.province.totalProduction += newProduction - this.production;
         this.production = newProduction;
     }
