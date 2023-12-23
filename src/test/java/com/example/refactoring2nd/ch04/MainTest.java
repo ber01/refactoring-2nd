@@ -2,16 +2,18 @@ package com.example.refactoring2nd.ch04;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 class MainTest {
 
     @Test
     public void test() {
-        ProvinceData provinceData = sampleProvinceData();
-        System.out.println(provinceData.toString());
+        Province asia = new Province(sampleProvinceData());
+        assertThat(asia.shortfall()).isEqualTo(5);
     }
 
-    private static ProvinceData sampleProvinceData() {
-        return ProvinceData.sampleProvinceData();
+    private static Doc sampleProvinceData() {
+        return Doc.sampleProvinceData();
     }
 
 }
